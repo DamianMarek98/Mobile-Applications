@@ -1,11 +1,11 @@
 package com.example.lab2;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class CameraAugmentedActivity extends Activity implements SensorEventListener {
     /**
@@ -29,13 +28,16 @@ public class CameraAugmentedActivity extends Activity implements SensorEventList
     Preview myCameraView;
     private Sensor sensorMagnetic;
     private Sensor gravSensor;
+    private Location ggLocation = new Location("");
+    private Location sopotMoloLoaction = new Location("");
+    private Location userLocation = new Location("");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        rl = (RelativeLayout) findViewById(R.id.relativeLayout1);
+        rl = findViewById(R.id.relativeLayout1);
 
         myCameraView = new Preview(this);
         rl.addView(myCameraView);
@@ -43,10 +45,20 @@ public class CameraAugmentedActivity extends Activity implements SensorEventList
         myCameraOverlay = new MyView(this);
         rl.addView(myCameraOverlay);
 
-
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         gravSensor = sm.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sensorMagnetic = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        setCoordinates();
+    }
+
+    private void setCoordinates() {
+        ggLocation.setLatitude(18.619128815946382);
+        ggLocation.setLongitude(54.37144083542352);
+        sopotMoloLoaction.setLatitude(18.573474841027867);
+        sopotMoloLoaction.setLongitude(54.447115370150804);
+        userLocation.setLatitude(18.55611413951967);
+        userLocation.setLongitude(54.34892548675461);
     }
 
     @Override
@@ -104,6 +116,9 @@ public class CameraAugmentedActivity extends Activity implements SensorEventList
                         .collect(Collectors.toList());
                 myCameraOverlay.setOrientationText(degrees.toString());
 
+                myCameraOverlay.setUserGgAngle(Float.toString(userLocation.bearingTo(ggLocation)));
+                myCameraOverlay.setUserMoloAngle(Float.toString(userLocation.bearingTo(sopotMoloLoaction)));
+
                 // Wektor obrotu urządzenia wyliczony poprzez przemnożenie macierzy obrotu
                 // z wektorem kamery:
                 float[] deviceVector = new float[3];
@@ -123,4 +138,22 @@ public class CameraAugmentedActivity extends Activity implements SensorEventList
             mGeomagnetic = event.values.clone();
         }
     }
+
+    float getAngle(float[] a, float b[])
+    {
+        return (float) Math.acos(
+                dotProduct(a, b) / (vectorMagnitude(a) * vectorMagnitude(b))
+        );
+    }
+
+    float dotProduct(float[] a, float[] b)
+    {
+        return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+    }
+
+    float vectorMagnitude(float[] vec)
+    {
+        return (float) Math.sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+    }
+
 }

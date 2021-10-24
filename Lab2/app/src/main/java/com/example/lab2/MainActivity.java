@@ -16,13 +16,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermissions();
-        Location ggLocation = new Location("");
-        ggLocation.setLatitude(18.619128815946382);
-        ggLocation.setLongitude(54.37144083542352);
-        Location sopotMoloLoaction = new Location("");
-        ggLocation.setLatitude(18.573474841027867);
-        ggLocation.setLongitude(54.447115370150804);
-
     }
 
     @Override

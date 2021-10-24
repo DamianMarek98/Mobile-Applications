@@ -10,6 +10,8 @@ public class MyView  extends View  {
     private float[] data =null;
     private String orientationText;
     private String deviceVectorText;
+    private String userGgAngle;
+    private String userMoloAngle;
 
     public void setOrientationText(String orientationText) {
         this.orientationText = orientationText;
@@ -17,6 +19,14 @@ public class MyView  extends View  {
 
     public void setDeviceVectorText(String deviceVectorText) {
         this.deviceVectorText = deviceVectorText;
+    }
+
+    public void setUserGgAngle(String userGgAngle) {
+        this.userGgAngle = userGgAngle;
+    }
+
+    public void setUserMoloAngle(String userMoloAngle) {
+        this.userMoloAngle = userMoloAngle;
     }
 
     public void setData(float[] data) {
@@ -43,6 +53,8 @@ public class MyView  extends View  {
         canvas.drawText("MojeView.onDraw: j="+j++, 200, 150, p);
         canvas.drawText("Orientation: " + orientationText, 200, 200, p);
         canvas.drawText("Device vector: " + deviceVectorText, 200, 250, p);
+        canvas.drawText("Angle 1: " + userGgAngle, 200, 300, p);
+        canvas.drawText("Angle 2: " + userMoloAngle, 200, 350, p);
         if(data !=null)
         {
             canvas.drawLine(0, 0, 100* data[0], 100* data[0], p);
