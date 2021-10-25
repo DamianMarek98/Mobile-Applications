@@ -31,6 +31,8 @@ public class CameraAugmentedActivity extends Activity implements SensorEventList
     private Location ggLocation = new Location("");
     private Location sopotMoloLoaction = new Location("");
     private Location userLocation = new Location("");
+    private float[] ggDirections = new float[3];
+    private float[] moloDirections = new float[3];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,8 +118,10 @@ public class CameraAugmentedActivity extends Activity implements SensorEventList
                         .collect(Collectors.toList());
                 myCameraOverlay.setOrientationText(degrees.toString());
 
-                myCameraOverlay.setUserGgAngle(Float.toString(userLocation.bearingTo(ggLocation)));
-                myCameraOverlay.setUserMoloAngle(Float.toString(userLocation.bearingTo(sopotMoloLoaction)));
+                float degreeUserGg = userLocation.bearingTo(ggLocation);
+                float degreeUserMolo = userLocation.bearingTo(sopotMoloLoaction);
+                myCameraOverlay.setUserGgAngle(Float.toString(degreeUserGg));
+                myCameraOverlay.setUserMoloAngle(Float.toString(degreeUserMolo));
 
                 // Wektor obrotu urządzenia wyliczony poprzez przemnożenie macierzy obrotu
                 // z wektorem kamery:
@@ -132,11 +136,30 @@ public class CameraAugmentedActivity extends Activity implements SensorEventList
                         rotationMatrix[7]*cameraVector[1] +
                         rotationMatrix[8]*cameraVector[2];
                 myCameraOverlay.setDeviceVectorText(Arrays.toString(deviceVector));
+
+                setDirections(ggDirections, degreeUserGg);
+                setDirections(moloDirections, degreeUserMolo);
+                myCameraOverlay.setDirectionsGg(Arrays.toString(ggDirections));
+                myCameraOverlay.setDirectionsMolo(Arrays.toString(moloDirections));
+                myCameraOverlay.setAngleGg(Double.toString(getAngle(ggDirections, deviceVector)));
+                myCameraOverlay.setAngleMolo(Double.toString(getAngle(moloDirections, deviceVector)));
+
+
                 myCameraOverlay.invalidate();
             }
         } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             mGeomagnetic = event.values.clone();
         }
+    }
+
+    private void setDirections(float[] directions, float degreeUserGg) {
+        directions[0] = (float) Math.sin(getRadians(degreeUserGg));
+        directions[1] = (float) Math.cos(getRadians(degreeUserGg));
+        directions[2] = 0f;
+    }
+
+    double getRadians(float degree) {
+        return degree * 3.14 / 180;
     }
 
     float getAngle(float[] a, float b[])
