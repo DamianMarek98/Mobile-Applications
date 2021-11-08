@@ -32,14 +32,14 @@ public class ProcessLocation implements LocationListener {
 
     private void processLocation(Location location) {
         String info;
-        info = location.getLatitude() + " " + location.getLongitude();
+        info = location.getLatitude() + " " + location.getLongitude() + "\n";
         if (prevLocation != null) {
             float bearing = prevLocation.bearingTo(location);
             float distance = prevLocation.distanceTo(location);
             info += "Dystans: " + distance + "m, kierunek:" + bearing + "\n";
             info += "Prędkość: " + location.getSpeed() + "m/s\n";
-            info += "Akt. pozycja: lon:" + location.getLongitude() + ", lat: " + location.getLatitude() + "\n";
-            info += "Pop. pozycja: lon:" + prevLocation.getLongitude() + ", lat: " + prevLocation.getLatitude() + "\n";
+            info += "Akt. pozycja:\nlon:" + location.getLongitude() + "\nlat: " + location.getLatitude() + "\n";
+            info += "Pop. pozycja:\nlon:" + prevLocation.getLongitude() + "\nlat: " + prevLocation.getLatitude() + "\n";
             try {
                 info += addClosestPointInfo(location);
             } catch (Exception e) {
