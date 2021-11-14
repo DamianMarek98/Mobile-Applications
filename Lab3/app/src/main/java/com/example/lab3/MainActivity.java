@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         registerProcessLocation();
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, listener);
     }
 
     @Override
@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
         if (lm == null) {
             lm = (LocationManager) getSystemService(LOCATION_SERVICE);
             tv = findViewById(R.id.loctv);
-            listener = new ProcessLocation(locationText -> {
-                tv.setText(locationText);
-            });
+            listener = new ProcessLocation(locationText -> tv.setText(locationText));
             addButtonCallback();
         }
     }
